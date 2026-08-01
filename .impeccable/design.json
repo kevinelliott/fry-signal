@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-01T05:31:29Z",
+  "title": "Design System: Fry Signal",
+  "extensions": {
+    "colorMeta": {
+      "asphalt": { "role": "neutral", "displayName": "Asphalt", "canonical": "#11161a", "tonalRamp": ["oklch(15% 0.011 242.4)", "oklch(27% 0.011 242.4)", "oklch(39% 0.011 242.4)", "oklch(51% 0.011 242.4)", "oklch(63% 0.011 242.4)", "oklch(75% 0.011 242.4)", "oklch(87% 0.011 242.4)", "oklch(95% 0.011 242.4)"] },
+      "night-road": { "role": "neutral", "displayName": "Night Road", "canonical": "#20272b", "tonalRamp": ["oklch(15% 0.012 233)", "oklch(27% 0.012 233)", "oklch(39% 0.012 233)", "oklch(51% 0.012 233)", "oklch(63% 0.012 233)", "oklch(75% 0.012 233)", "oklch(87% 0.012 233)", "oklch(95% 0.012 233)"] },
+      "night-road-soft": { "role": "neutral", "displayName": "Night Road Soft", "canonical": "#2f383d", "tonalRamp": ["oklch(15% 0.015 232.2)", "oklch(27% 0.015 232.2)", "oklch(39% 0.015 232.2)", "oklch(51% 0.015 232.2)", "oklch(63% 0.015 232.2)", "oklch(75% 0.015 232.2)", "oklch(87% 0.015 232.2)", "oklch(95% 0.015 232.2)"] },
+      "fryer-paper": { "role": "neutral", "displayName": "Fryer Paper", "canonical": "#f4e2be", "tonalRamp": ["oklch(15% 0.051 84.5)", "oklch(27% 0.051 84.5)", "oklch(39% 0.051 84.5)", "oklch(51% 0.051 84.5)", "oklch(63% 0.051 84.5)", "oklch(75% 0.051 84.5)", "oklch(87% 0.051 84.5)", "oklch(95% 0.051 84.5)"] },
+      "paper-dim": { "role": "neutral", "displayName": "Paper Dim", "canonical": "#d6c19b", "tonalRamp": ["oklch(15% 0.056 82.3)", "oklch(27% 0.056 82.3)", "oklch(39% 0.056 82.3)", "oklch(51% 0.056 82.3)", "oklch(63% 0.056 82.3)", "oklch(75% 0.056 82.3)", "oklch(87% 0.056 82.3)", "oklch(95% 0.056 82.3)"] },
+      "marquee-yellow": { "role": "primary", "displayName": "Marquee Yellow", "canonical": "#f2c94c", "tonalRamp": ["oklch(15% 0.146 90.5)", "oklch(27% 0.146 90.5)", "oklch(39% 0.146 90.5)", "oklch(51% 0.146 90.5)", "oklch(63% 0.146 90.5)", "oklch(75% 0.146 90.5)", "oklch(87% 0.146 90.5)", "oklch(95% 0.146 90.5)"] },
+      "pepper-red": { "role": "primary", "displayName": "Pepper Red", "canonical": "#a93a27", "tonalRamp": ["oklch(15% 0.149 32.1)", "oklch(27% 0.149 32.1)", "oklch(39% 0.149 32.1)", "oklch(51% 0.149 32.1)", "oklch(63% 0.149 32.1)", "oklch(75% 0.149 32.1)", "oklch(87% 0.149 32.1)", "oklch(95% 0.149 32.1)"] },
+      "pickle-green": { "role": "secondary", "displayName": "Pickle Green", "canonical": "#496b36", "tonalRamp": ["oklch(15% 0.089 135.3)", "oklch(27% 0.089 135.3)", "oklch(39% 0.089 135.3)", "oklch(51% 0.089 135.3)", "oklch(63% 0.089 135.3)", "oklch(75% 0.089 135.3)", "oklch(87% 0.089 135.3)", "oklch(95% 0.089 135.3)"] },
+      "soda-blue": { "role": "secondary", "displayName": "Soda Blue", "canonical": "#27647c", "tonalRamp": ["oklch(15% 0.073 227.4)", "oklch(27% 0.073 227.4)", "oklch(39% 0.073 227.4)", "oklch(51% 0.073 227.4)", "oklch(63% 0.073 227.4)", "oklch(75% 0.073 227.4)", "oklch(87% 0.073 227.4)", "oklch(95% 0.073 227.4)"] },
+      "taillight-rose": { "role": "tertiary", "displayName": "Taillight Rose", "canonical": "#c64c5d", "tonalRamp": ["oklch(15% 0.156 15)", "oklch(27% 0.156 15)", "oklch(39% 0.156 15)", "oklch(51% 0.156 15)", "oklch(63% 0.156 15)", "oklch(75% 0.156 15)", "oklch(87% 0.156 15)", "oklch(95% 0.156 15)"] },
+      "steel": { "role": "neutral", "displayName": "Galvanized Steel", "canonical": "#7c8790", "tonalRamp": ["oklch(15% 0.019 242.6)", "oklch(27% 0.019 242.6)", "oklch(39% 0.019 242.6)", "oklch(51% 0.019 242.6)", "oklch(63% 0.019 242.6)", "oklch(75% 0.019 242.6)", "oklch(87% 0.019 242.6)", "oklch(95% 0.019 242.6)"] },
+      "steel-dark": { "role": "neutral", "displayName": "Dark Steel", "canonical": "#3c474d", "tonalRamp": ["oklch(15% 0.018 231.7)", "oklch(27% 0.018 231.7)", "oklch(39% 0.018 231.7)", "oklch(51% 0.018 231.7)", "oklch(63% 0.018 231.7)", "oklch(75% 0.018 231.7)", "oklch(87% 0.018 231.7)", "oklch(95% 0.018 231.7)"] },
+      "ink": { "role": "neutral", "displayName": "Instrument Ink", "canonical": "#16191d", "tonalRamp": ["oklch(15% 0.009 255.6)", "oklch(27% 0.009 255.6)", "oklch(39% 0.009 255.6)", "oklch(51% 0.009 255.6)", "oklch(63% 0.009 255.6)", "oklch(75% 0.009 255.6)", "oklch(87% 0.009 255.6)", "oklch(95% 0.009 255.6)"] },
+      "cream-text": { "role": "neutral", "displayName": "Cream Text", "canonical": "#fff2d1", "tonalRamp": ["oklch(15% 0.045 89.1)", "oklch(27% 0.045 89.1)", "oklch(39% 0.045 89.1)", "oklch(51% 0.045 89.1)", "oklch(63% 0.045 89.1)", "oklch(75% 0.045 89.1)", "oklch(87% 0.045 89.1)", "oklch(95% 0.045 89.1)"] },
+      "focus": { "role": "tertiary", "displayName": "Focus Blue", "canonical": "#91d8ff", "tonalRamp": ["oklch(15% 0.089 233.3)", "oklch(27% 0.089 233.3)", "oklch(39% 0.089 233.3)", "oklch(51% 0.089 233.3)", "oklch(63% 0.089 233.3)", "oklch(75% 0.089 233.3)", "oklch(87% 0.089 233.3)", "oklch(95% 0.089 233.3)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Roadside Display", "purpose": "Fry Signal wordmark only." },
+      "headline": { "displayName": "Instrument Headline", "purpose": "Panel titles, marquee stages, and service doctrine." },
+      "title": { "displayName": "Ticket Title", "purpose": "Forecast names and emphatic operator labels." },
+      "body": { "displayName": "Operator Body", "purpose": "Readable gameplay copy and control descriptions." },
+      "label": { "displayName": "Stamped Label", "purpose": "Statuses, costs, cues, and compact instructions." },
+      "readout": { "displayName": "Numeric Readout", "purpose": "Countdowns and instrument values with tabular numerals." }
+    },
+    "materials": [
+      { "name": "aged-ticket-paper", "path": "/materials/aged-ticket-paper.webp", "purpose": "Forecasts, bags, exception rail, commit drawer, reset control, service summaries, and House Book." },
+      { "name": "dimensional-track", "path": "/materials/dimensional-track.webp", "purpose": "Repeating fill inside the SVG route rails." },
+      { "name": "indicator-lamp", "path": "/materials/indicator-lamp.webp", "purpose": "Unlit and lit BATCH / PACK / GO lamp glass." },
+      { "name": "marquee-enamel", "path": "/materials/marquee-enamel.webp", "purpose": "Painted signage, source plates, selected states, recovery actions, and deterministic progress." },
+      { "name": "riveted-steel", "path": "/materials/riveted-steel.webp", "purpose": "Outer shell, masthead, panel headers, board well, readouts, and shift-progress row." },
+      { "name": "route-switch", "path": "/materials/route-switch.webp", "purpose": "Physical Gate A and Gate B control faces." }
+    ],
+    "shadows": [
+      { "name": "instrument-shell", "value": "inset 0 0 0 2px #697278, inset 0 0 48px rgb(0 0 0 / 72%), 0 16px 34px rgb(0 0 0 / 60%)", "purpose": "Outer machine frame." },
+      { "name": "mounted-panel", "value": "inset 0 0 0 1px rgb(255 255 255 / 13%), 0 8px 14px rgb(0 0 0 / 46%)", "purpose": "Major attached panels." },
+      { "name": "physical-control", "value": "inset 0 0 0 1px rgb(255 255 255 / 16%), 0 4px 0 rgb(0 0 0 / 38%)", "purpose": "Depressible buttons." },
+      { "name": "active-gate", "value": "inset 0 0 0 1px #b99645, 0 0 13px rgb(242 201 76 / 42%), 0 7px 11px rgb(0 0 0 / 58%)", "purpose": "Selected route switch." },
+      { "name": "lit-lamp", "value": "inset 0 0 14px rgb(255 244 188 / 42%), 0 0 19px rgb(255 183 57 / 55%)", "purpose": "Energized marquee lamp." }
+    ],
+    "motion": [
+      { "name": "ghost-pulse", "value": "1.1s linear infinite", "purpose": "Preview route dash travel." },
+      { "name": "light-run", "value": "0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 1", "purpose": "Single committed-route confirmation sweep." },
+      { "name": "bag-thunk", "value": "0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both", "purpose": "Short physical order movement and settle." },
+      { "name": "reduced-motion", "value": "0.001ms, one iteration", "purpose": "Static route dash and direct final bag position." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "1180px", "purpose": "Forecast and board remain; exception becomes a fixed bottom-right sheet." },
+      { "name": "mobile", "value": "820px", "purpose": "Forecast becomes a drawer; board remains visible; exception anchors across the bottom." },
+      { "name": "compact-mobile", "value": "480px", "purpose": "Compress signage, route hardware, and exception detail." },
+      { "name": "minimum", "value": "320px", "purpose": "Smallest supported layout width." }
+    ],
+    "stateModel": {
+      "authority": "Local deterministic reducer",
+      "snapshot": {
+        "storage": "localStorage",
+        "keyPattern": "fry-signal:{fixture-id}:fixture-{fixture-version}:rules-{rules-version}",
+        "restore": "restoreShift validates a saved snapshot; invalid data is removed and replaced with createInitialShift.",
+        "save": "serializeShift writes each reducer state change after restoration completes.",
+        "reset": "Remove the versioned snapshot and restore initial shift, first forecast, steady posture, and closed mobile drawer."
+      },
+      "progress": {
+        "sequence": ["next deterministic arrival", "close service to fixture duration", "settle shift and open House Book"],
+        "disabledWhile": ["snapshot restoring", "paused", "settled", "recovery offer open", "forecast unread", "opening batch absent"]
+      },
+      "recovery": {
+        "causes": ["ROUTE_BLOCKED", "WAITING_COMPONENT"],
+        "actions": ["LOOPBACK_SAVE", "PULL_FORWARD", "SHORT_BATCH"],
+        "renderFrom": "RecoveryOffer.actions in order; match RecoveryOffer.costs by action for ticks, freshness, and ledger cost.",
+        "routeFeature": "Loopback label: +5 ticks · −3 freshness.",
+        "invariant": "No universal fixed action pair; an open offer must resolve before deterministic progress continues."
+      },
+      "settlement": {
+        "visibleWhen": "shift.result is non-null",
+        "serviceFields": ["warmth", "accuracy", "flow", "care", "serviceSignal", "health", "dispatchedOrders", "totalOrders"],
+        "ledgerFields": ["salesCents", "ingredientCostCents", "recoveryCostCents", "retirementCostCents", "protectedShiftCostCents", "marginCents"],
+        "invariant": "Settled state is immutable; margin is restaurant health, not a transferable reward."
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Signal Stage",
+      "kind": "custom",
+      "description": "One fixed marquee stage with lamp, icon, and label; lit state never relies on hue alone.",
+      "html": "<div class=\"ds-signal-stage ds-is-lit\"><span class=\"ds-signal-lamp\" aria-hidden=\"true\">B</span><strong>BATCH</strong></div>",
+      "css": ".ds-signal-stage{display:grid;grid-template-columns:49px auto;align-items:center;justify-content:center;gap:8px;min-height:72px;border:2px solid #5c491c;border-radius:4px;background:#caa62f url('/materials/marquee-enamel.webp') center/cover;color:var(--ink,#16191d);font:700 1.35rem 'Big Shoulders Variable','Arial Narrow',sans-serif;letter-spacing:.035em}.ds-signal-lamp{display:grid;width:49px;height:49px;place-items:center;border-radius:50%;background:#2b2c24 url('/materials/indicator-lamp.webp') center/150%;filter:grayscale(.76) brightness(.43);box-shadow:0 3px 5px rgb(0 0 0 / 50%);font:800 .8rem 'Atkinson Hyperlegible Next Variable',sans-serif}.ds-is-lit .ds-signal-lamp{background-color:#f0a31f;background-blend-mode:screen;filter:sepia(.35) saturate(1.42) brightness(1.32);box-shadow:inset 0 0 14px rgb(255 244 188 / 42%),0 0 19px rgb(255 183 57 / 55%)}.ds-signal-stage:focus-within{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Forecast Ticket",
+      "kind": "button",
+      "refersTo": "wave-ticket",
+      "description": "A complete announced wave presented as one tactile read action.",
+      "html": "<button class=\"ds-wave-ticket\" aria-pressed=\"true\"><span class=\"ds-wave-index\">1</span><strong>COMMUTER DRIFT</strong><span>00:45 · 3–4 orders</span><span>MOSTLY TENDER BOXES</span><small>● ● ■ · CURRENT · OPENING WAVE</small></button>",
+      "css": ".ds-wave-ticket{position:relative;display:grid;width:280px;min-height:144px;gap:3px;padding:14px 12px 12px 52px;border:1px solid #766c58;border-radius:2px;background:#e5d0a6 url('/materials/aged-ticket-paper.webp') center/cover;color:var(--ink,#16191d);box-shadow:inset 0 0 0 4px var(--marquee-yellow,#f2c94c),inset 0 0 18px rgb(80 57 26 / 22%);font:700 .76rem 'Atkinson Hyperlegible Next Variable',sans-serif;text-align:left}.ds-wave-ticket>strong{font:700 1.15rem 'Big Shoulders Variable','Arial Narrow',sans-serif;letter-spacing:.035em}.ds-wave-ticket>small{align-self:end;padding-top:8px;border-top:2px dashed var(--soda-blue,#27647c);color:var(--soda-blue,#27647c);font-weight:900;letter-spacing:.06em}.ds-wave-index{position:absolute;top:10px;left:0;display:grid;width:40px;height:42px;place-items:center;background:var(--pepper-red,#a93a27);clip-path:polygon(0 0,78% 0,100% 50%,78% 100%,0 100%);color:var(--cream-text,#fff2d1);font:700 1.4rem 'Big Shoulders Variable','Arial Narrow',sans-serif}.ds-wave-ticket:hover{background-color:#f3dda9}.ds-wave-ticket:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Physical Route Gate",
+      "kind": "button",
+      "refersTo": "route-gate-selected",
+      "description": "The primary route action, rendered as a named physical switch with explicit pressed state.",
+      "html": "<button class=\"ds-route-gate\" aria-pressed=\"true\">GATE B</button>",
+      "css": ".ds-route-gate{width:86px;min-height:74px;padding-top:46px;border:2px solid var(--marquee-yellow,#f2c94c);border-radius:4px;background:#67583b url('/materials/route-switch.webp') center 18%/165% auto no-repeat;color:var(--cream-text,#fff2d1);box-shadow:inset 0 0 0 1px #b99645,0 0 13px rgb(242 201 76 / 42%),0 7px 11px rgb(0 0 0 / 58%);font:900 .67rem 'Atkinson Hyperlegible Next Variable',sans-serif;letter-spacing:.04em;text-shadow:0 1px 2px #000}.ds-route-gate:hover{filter:brightness(1.08)}.ds-route-gate:active{transform:translateY(2px)}.ds-route-gate:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Reducer Recovery Action",
+      "kind": "button",
+      "refersTo": "recovery-action-green",
+      "description": "One reducer-offered recovery row; production copy and tick, freshness, and ledger costs come from the matched RecoveryOffer action and cost.",
+      "html": "<button class=\"ds-recovery\"><span class=\"ds-recovery-icon\">✚</span><span><strong>SHORT BATCH</strong><small>Cook only the missing components · +8 ticks · −5 freshness · $2.40</small></span></button>",
+      "css": ".ds-recovery{display:grid;min-height:64px;grid-template-columns:38px 1fr;align-items:center;gap:9px;padding:8px;border:0;border-radius:4px;background:var(--pickle-green,#496b36) url('/materials/marquee-enamel.webp') center/cover;color:var(--cream-text,#fff2d1);box-shadow:inset 0 0 0 1px rgb(255 255 255 / 16%),0 4px 0 rgb(0 0 0 / 38%);font-family:'Atkinson Hyperlegible Next Variable',sans-serif;text-align:left}.ds-recovery>span:last-child{display:grid;gap:2px}.ds-recovery strong{font-size:.78rem}.ds-recovery small{font-size:.65rem}.ds-recovery-icon{display:grid;width:38px;height:38px;place-items:center;border:2px solid currentColor;border-radius:7px;font-size:1.5rem}.ds-recovery:hover{filter:brightness(1.1)}.ds-recovery:active{transform:translateY(2px)}.ds-recovery:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Batch Posture",
+      "kind": "button",
+      "description": "One member of the paired opening-batch choice, with selected state exposed in color and border.",
+      "html": "<button class=\"ds-posture\" aria-pressed=\"true\"><strong>STEADY EIGHT</strong><span>8 of every Phase 1 component</span></button>",
+      "css": ".ds-posture{display:grid;min-width:220px;min-height:58px;gap:1px;padding:8px 12px;border:2px solid var(--soda-blue,#27647c);border-radius:4px;background:#d6ebf0 url('/materials/marquee-enamel.webp') center/cover;background-blend-mode:soft-light;color:var(--ink,#16191d);box-shadow:inset 0 0 0 1px rgb(255 255 255 / 16%),0 4px 0 rgb(0 0 0 / 38%);font-family:'Atkinson Hyperlegible Next Variable',sans-serif;text-align:left}.ds-posture strong{font-size:.75rem}.ds-posture span{color:#585044;font-size:.68rem}.ds-posture:hover{filter:brightness(1.05)}.ds-posture:active{transform:translateY(2px)}.ds-posture:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Batch Commit",
+      "kind": "button",
+      "refersTo": "batch-commit",
+      "description": "The marquee-yellow primary action that becomes a truthful green committed state.",
+      "html": "<button class=\"ds-batch-commit\"><span aria-hidden=\"true\">▣</span> COMMIT OPENING BATCH</button>",
+      "css": ".ds-batch-commit{display:flex;min-width:220px;min-height:58px;align-items:center;justify-content:center;gap:9px;padding:8px 14px;border:0;border-radius:4px;background:var(--marquee-yellow,#f2c94c) url('/materials/marquee-enamel.webp') center/cover;color:var(--ink,#16191d);box-shadow:inset 0 0 0 1px rgb(255 255 255 / 16%),0 4px 0 rgb(0 0 0 / 38%);font:900 .76rem 'Atkinson Hyperlegible Next Variable',sans-serif}.ds-batch-commit:hover{filter:brightness(1.08)}.ds-batch-commit:active{transform:translateY(2px)}.ds-batch-commit:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}.ds-batch-commit[aria-pressed='true']{background-color:var(--pickle-green,#496b36);color:var(--cream-text,#fff2d1)}"
+    },
+    {
+      "name": "Shift Progress Action",
+      "kind": "button",
+      "refersTo": "shift-progress-action",
+      "description": "The single deterministic progression control; its label changes from next arrival to close service to settle.",
+      "html": "<button class=\"ds-progress\">RUN NEXT ARRIVAL · MM-04 AT 02:15</button>",
+      "css": ".ds-progress{min-height:48px;padding:8px 12px;border:2px solid #111618;border-radius:4px;background:#caa62f url('/materials/marquee-enamel.webp') center/cover;background-blend-mode:multiply;color:var(--ink,#16191d);box-shadow:inset 0 0 0 1px rgb(255 255 255 / 20%),0 4px 0 rgb(0 0 0 / 38%);font:900 .76rem 'Atkinson Hyperlegible Next Variable',sans-serif;text-transform:uppercase}.ds-progress:hover{filter:brightness(1.08)}.ds-progress:active{transform:translateY(2px)}.ds-progress:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}.ds-progress:disabled{filter:saturate(.3);opacity:.58}"
+    },
+    {
+      "name": "Reset Local Shift",
+      "kind": "button",
+      "refersTo": "shift-reset",
+      "description": "A persistent paper-textured reset beside versioned local save status.",
+      "html": "<button class=\"ds-reset\">RESET LOCAL SHIFT</button>",
+      "css": ".ds-reset{min-height:48px;padding:8px 12px;border:2px solid #111618;border-radius:4px;background:#d8c194 url('/materials/aged-ticket-paper.webp') center/cover;color:var(--ink,#16191d);box-shadow:inset 0 0 0 1px rgb(255 255 255 / 20%),0 4px 0 rgb(0 0 0 / 38%);font:900 .76rem 'Atkinson Hyperlegible Next Variable',sans-serif;text-transform:uppercase}.ds-reset:hover{filter:brightness(1.05)}.ds-reset:active{transform:translateY(2px)}.ds-reset:focus-visible{outline:3px solid var(--focus,#91d8ff);outline-offset:3px}"
+    },
+    {
+      "name": "Settled House Book",
+      "kind": "card",
+      "refersTo": "house-book",
+      "description": "The settlement-only reducer receipt for service result, dispatched orders, ledger costs, and restaurant health margin; sample values show a reachable steady-eight, Short-Batch path.",
+      "html": "<section class=\"ds-house-book\"><div><small>SHIFT SETTLED · REDUCER-DERIVED</small><h2>HOUSE BOOK</h2><strong>LOVED BUT STRETCHED</strong></div><div class=\"ds-service-signal\"><span>SERVICE SIGNAL</span><strong>84</strong><span>15 / 15 ORDERS DISPATCHED</span></div><dl><div><dt>TICKET SALES</dt><dd>$212.50</dd></div><div><dt>RECOVERY CARE</dt><dd>−$16.80</dd></div><div><dt>RESTAURANT HEALTH MARGIN</dt><dd>$88.65</dd></div></dl><p>Margin keeps Mile 42 healthy; it is not a transferable reward.</p></section>",
+      "css": ".ds-house-book{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(150px,.5fr) minmax(260px,1.5fr);gap:16px;padding:16px;border:4px solid #111618;border-radius:4px;background:#dcc69a url('/materials/aged-ticket-paper.webp') center/cover;color:var(--ink,#16191d);box-shadow:inset 0 0 0 2px #8e7b5c,0 10px 22px rgb(0 0 0 / 42%);font-family:'Atkinson Hyperlegible Next Variable',sans-serif}.ds-house-book h2{margin:0;font:700 2rem 'Big Shoulders Variable','Arial Narrow',sans-serif}.ds-house-book small,.ds-house-book span{font-size:.67rem;font-weight:800}.ds-house-book>div>strong{color:var(--pickle-green,#496b36)}.ds-service-signal{display:grid;place-content:center;border:2px solid #5d4e34;background:var(--marquee-yellow,#f2c94c);text-align:center}.ds-service-signal strong{font:700 3rem/1 'Big Shoulders Variable','Arial Narrow',sans-serif}.ds-house-book dl{display:grid;gap:3px;margin:0}.ds-house-book dl div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed #857352;font-size:.72rem}.ds-house-book dd{margin:0;font-variant-numeric:tabular-nums}.ds-house-book p{grid-column:1/-1;margin:0;color:#51483a;font-size:.7rem;text-align:right}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Roadside Signal Desk",
+    "overview": "Fry Signal is a cheerful 1960s drive-through control room rebuilt as a late-night electromechanical routing instrument. The interface is one bolted machine: dark steel casing, fryer-paper tickets, enamel plates, lamps, switches, rails, and compact operator labels all belong to the same physical object. It must feel handled and dependable, not nostalgic for its own sake.\n\nThe route is the game. A forecast sits at the left edge, the continuous side-on track network owns the center, and an exception rail occupies the right. BATCH / PACK / GO is the fixed marquee grammar above that instrument. Operational state is communicated with position, route geometry, shape, label, lamp count, and motion together; color adds character but never carries meaning alone.\n\nThe raster materials are authored finish layers, while all words, controls, icons, paths, bags, vehicles, and order marks remain semantic HTML, CSS, or SVG. The six shipped materials have fixed roles: riveted steel frames the shell, dark panels, and shift-progress row; aged ticket paper skins forecasts, bags, the exception rail, commit drawer, reset control, service summaries, and House Book; marquee enamel gives painted signs, state plates, recovery actions, and deterministic progress their worn coating; indicator lamp supplies lamp glass and hardware; dimensional track forms the rail fill; and route switch makes gates read as physical levers.",
+    "keyCharacteristics": [
+      "One monolithic instrument rather than a collection of floating dashboard cards.",
+      "Worn steel, aged paper, painted enamel, inset rails, visible fasteners, and restrained grime.",
+      "A dominant route topology with forecast and exception context held at its edges.",
+      "Condensed roadside display type paired with highly legible operator text.",
+      "Shape-plus-label signals, crisp vehicle silhouettes, fixed marquee stages, and explicit costs.",
+      "Tactile state changes with bounded motion and complete reduced-motion equivalents.",
+      "Deterministic local progress, versioned save truth, and a settlement-only House Book."
+    ],
+    "rules": [
+      { "name": "The Scarce Lamp Rule", "body": "Marquee yellow marks the current decision or active stage; it is not a generic decoration or background wash.", "section": "colors" },
+      { "name": "The Redundant Signal Rule", "body": "Every status color must travel with a stable label, shape, position, pattern, or route change.", "section": "colors" },
+      { "name": "The Two-Voice Rule", "body": "Big Shoulders names the machine and its stations; Atkinson explains what is happening and what an action costs.", "section": "typography" },
+      { "name": "The Operator Copy Rule", "body": "Small text may be compact, but never vague: action, consequence, duration, and status remain explicit.", "section": "typography" },
+      { "name": "The Continuous Board Rule", "body": "Responsive adaptation may compress context into drawers or sheets, but it never replaces the route board with hidden task pages.", "section": "layout" },
+      { "name": "The No-Drag Rule", "body": "Every essential route choice is a button reachable by keyboard, touch, or pointer; route operation never depends on dragging.", "section": "layout" },
+      { "name": "The Mounted-Plate Rule", "body": "Elevation expresses how a piece is fastened to the instrument; nothing floats without a mechanical reason.", "section": "elevation" },
+      { "name": "The Hardware Radius Rule", "body": "Keep corners tight enough to read as enamel plate, ticket, or chassis; large soft card radii break the instrument illusion.", "section": "shapes" },
+      { "name": "The Reducer Terms Rule", "body": "Recovery names, availability, and costs come from the current RecoveryOffer; never hard-code a universal pair or stale consequence copy in the interface.", "section": "components" },
+      { "name": "The Local Truth Rule", "body": "State text distinguishes “Restoring local shift…” from “Saved locally” and displays both fixture and rules versions; local persistence is never described as account, server, or chain authority.", "section": "components" },
+      { "name": "The Settlement Receipt Rule", "body": "The House Book reports one immutable reducer result after the final recovery window; it never forecasts, animates, or implies external ownership.", "section": "components" }
+    ],
+    "dos": [
+      "Do make every new surface look mounted into the same Mile 42 instrument through steel framing, paper or enamel plates, hard borders, and purposeful depth.",
+      "Do keep the route topology primary and express decisions through named gates, visible paths, destinations, and explicit costs.",
+      "Do pair color with shape, pattern, position, count, icon, and accessible text.",
+      "Do use Big Shoulders for station-like display roles and Atkinson Hyperlegible Next for operational meaning.",
+      "Do preserve the responsive forecast drawer, continuous route board, anchored exception sheet, safe-area clearance, reduced motion, and forced-colors behavior.",
+      "Do render progress, recovery terms, service condition, and House Book values from the reducer state that owns them.",
+      "Do keep local restore, saved, reset, final-recovery, and settled states explicit in control copy."
+    ],
+    "donts": [
+      "Don't break the interface into generic floating dashboard cards, soft pills, glass panels, or interchangeable SaaS controls.",
+      "Don't turn ordinary batching, packing, or dispatch into repeated minigames or repeat HOLD / LOOP / SEND controls on every bag.",
+      "Don't present recovery as a score bonus, hide its cost, or use money-first status in the live service HUD.",
+      "Don't assume every recovery is Loopback Save plus Pull Forward; render the current offer's action and cost arrays.",
+      "Don't show the House Book before settlement or imply that its margin is transferable, remote, or chain-authoritative.",
+      "Don't represent crew as capacity counters, collectible upgrades, or disposable production units.",
+      "Don't use a mascot panel in the live HUD or let raster assets carry required text or state.",
+      "Don't hide the route board on mobile or require drag, animation, or color perception to operate it."
+    ]
+  }
+}
