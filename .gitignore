@@ -5,6 +5,7 @@ coverage/
 playwright-report/
 test-results/
 .impeccable/review/
+.playtests-private/
 *.tsbuildinfo
 .DS_Store
 .env

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import Home from "./page";
@@ -121,10 +121,11 @@ describe("Midnight Merge player surface", () => {
     expect(screen.getByText(/Restaurant health margin/i)).toBeInTheDocument();
     expect(screen.getByText(/Margin keeps Mile 42 healthy/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Arena Let-Out/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Rain route read clean/i)).toBeInTheDocument();
-    expect(screen.getByText(/This local postcard records how the shift ended/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Try the route again/i)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
+    const postcard = screen.getByLabelText("Local Shift Postcard");
+    expect(within(postcard).getByText(/Midnight Merge complete/i)).toBeInTheDocument();
+    expect(within(postcard).getByText(/This local postcard marks the end of this run/i)).toBeInTheDocument();
+    expect(within(postcard).queryByText(/route|gate|crossover|switch|recovery|batch|score|reward/i)).not.toBeInTheDocument();
+    expect(within(postcard).getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
   });
 
   it("restores the versioned local snapshot without overwriting it during hydration", async () => {
