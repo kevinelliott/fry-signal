@@ -700,7 +700,7 @@ function HouseBook({ shift, onReplay }: { shift: ShiftState; onReplay: () => voi
         <div>
           <span>Local Shift Postcard</span>
           <strong>{shift.faultCount === 0 ? "Rain route read clean" : `${shift.faultCount} wrong turn${shift.faultCount === 1 ? "" : "s"} cared for`}</strong>
-          <p>{result.dispatchedOrders} orders reached the window. Try the route again to test a different crossover or batch posture.</p>
+          <p>{result.dispatchedOrders} orders reached the window. This local postcard records how the shift ended.</p>
         </div>
         <button type="button" onClick={onReplay}>Run Midnight Merge again</button>
       </div>
