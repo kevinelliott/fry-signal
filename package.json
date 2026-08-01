@@ -21,7 +21,10 @@
     "test": "pnpm -r test",
     "test:unit": "pnpm --filter @fry-signal/domain test",
     "test:e2e": "pnpm --filter @fry-signal/web test:e2e",
-    "test:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm --filter @fry-signal/web test:dependency-compat && pnpm build && pnpm test:e2e",
+    "test:e2e:production": "pnpm build && FRY_SIGNAL_E2E_PRODUCTION=1 pnpm --filter @fry-signal/web test:e2e",
+    "test:gate1": "node --test scripts/gate1/validate-cohort.test.mjs",
+    "gate1:validate": "node scripts/gate1/validate-cohort.mjs",
+    "test:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:gate1 && pnpm --filter @fry-signal/web test:dependency-compat && pnpm build && FRY_SIGNAL_E2E_PRODUCTION=1 pnpm --filter @fry-signal/web test:e2e",
     "tezos:localnet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs localnet",
     "tezos:shadownet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs shadownet"
   }

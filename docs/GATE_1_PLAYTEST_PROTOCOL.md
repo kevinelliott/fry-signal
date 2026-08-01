@@ -11,10 +11,12 @@ Do not begin Gate 2 breadth or Gate 4 chain work from an informal demo, internal
 ## Cohort
 
 - Recruit at least 10 valid first-run participants who have not watched another Fry Signal session and have not read its design documents.
+- Participants must be people outside the implementation team. Agent, bot, internal-team, informal-demo, and facilitator runs never count.
 - Use at least four compact/mobile touch sessions, four desktop pointer sessions, and two keyboard-only sessions. A keyboard-only session may also count toward its viewport group. Record actual viewport, device, browser, input method, reduced-motion setting, zoom, and any requested accommodation.
 - Do not recruit only crypto players, restaurant-game experts, or members of the implementation team.
 - A returning participant may test a repair, but never counts again as first-run evidence.
 - Use anonymous study IDs such as `P01`; do not collect names, wallet addresses, account identifiers, or demographic details that are unnecessary to this gate.
+- Keep a separate recruiter-only, access-restricted linkage only when needed to prevent the same person counting twice across cohorts. Never commit or give it to the response coder; delete it with the raw worksheets.
 
 ## Candidate declaration
 
@@ -25,15 +27,18 @@ Before the first session, freeze and record:
 - fixture and rules versions shown by the application;
 - local production-build command and browser version;
 - network-disabled evidence boundary;
-- facilitator and independent response coder;
+- facilitator, independent response coder, and a predeclared third-human adjudicator for coding disagreements;
 - session dates and the empty worksheet template;
+- a fixed target number of valid sessions, recruitment closing date, and replacement rule for withdrawals or technical aborts;
+- immutable annotated-tag predeclaration, signed external timestamp anchor, and exact-build evidence references;
+- an off-repository raw-note location, access list, coding-review date, retention deadline no more than 30 days later, and deletion owner;
 - confirmation that the candidate does not tell players to replay for a route, gate, batch, score, reward, or other scored motive.
 
-Every participant must use the same declared candidate. If source, fixture, rules, or outcome-affecting configuration changes, close the cohort and start a new one.
+Every participant must use the same declared candidate. If source, fixture, rules, or outcome-affecting configuration changes, close the cohort and start a new one. Do not extend the predeclared valid-session target after seeing results; withdrawals and technical aborts may be replaced only under the predeclared rule.
 
 ## Facilitation rules
 
-Before opening the game, ask: “May I take anonymous notes about what happens and what you say during this session?” If the participant declines, thank them, collect nothing, and recruit a replacement.
+Before opening the game, ask: “May I take anonymous notes about what happens and what you say during this session?” If the participant declines, thank them, collect nothing, and recruit a replacement. This consent does not authorize publishing verbatim quotes. Ask separately before retaining any exact quote in the public report; a declined quote request never invalidates the session.
 
 Use the same neutral introduction:
 
@@ -61,7 +66,7 @@ If the player starts another shift, ask:
 
 > What were you hoping to do in this next run?
 
-This measure passes only when the player independently starts another shift and names a path, gate, crossover, switch timing, or recovery-route experiment. A batch-posture-only answer does not pass the existing different-route target. Replaying to claim a reward, increase a number, obey the interface or facilitator, or repeat the same actions does not pass.
+This measure passes only when the player independently starts another shift and names a path, gate, crossover, switch timing, or recovery-route experiment. A batch-posture-only answer does not pass the existing different-route target. Replaying to claim a reward, increase a number, obey the interface or facilitator, or repeat the same actions does not pass. The facilitator and independent human coder classify the de-identified motive separately; when they disagree, the predeclared third-human adjudicator applies this written rule and records the basis.
 
 If the player does not start another shift during the silent window, record a replay failure. After all scored responses are recorded, “What, if anything, would you do next?” may provide diagnostic context, but any replay after that prompt cannot enter the numerator.
 
@@ -75,7 +80,7 @@ Record the response verbatim without follow-up first. Afterward, a neutral clari
 
 The response passes when its primary idea is anticipating demand and shaping movement through batches, gates, routes, or recovery. It fails when the primary idea is only cooking faster, clicking on time, maximizing money, earning a token/reward, or following unexplained instructions.
 
-The facilitator and an independent coder score the de-identified first response separately. Resolve disagreements by the written rule, retain both original codes, and report the disagreement count.
+The facilitator and an independent coder score the de-identified first response separately. When they disagree, the predeclared third-human adjudicator applies the written rule and records a de-identified resolution note. Retain all three codes and report the disagreement and basis.
 
 ## Observation rubric
 
@@ -96,7 +101,7 @@ Also capture concise notes for the first point of confusion, whether warning mea
 ## Abort, withdrawal, and accessibility handling
 
 - A participant may withdraw at any time. Delete that session's notes and exclude it from the denominator.
-- A crash, corrupted fixture, wrong build, or facilitator protocol violation is a technical abort. Log it separately, exclude it, repair the setup, and recruit a replacement.
+- A crash, corrupted fixture, wrong build, or facilitator protocol violation is a technical abort. The facilitator and independent human coder must agree that the objective abort rule applies; retain both codes. Log it separately, exclude it, repair the setup, and recruit a replacement.
 - A participant who cannot finish because the interface, copy, input, motion, contrast, zoom, or layout blocks them remains in the denominator if they consent to retaining the observation. Count the scored measures as failures and open an accessibility/usability blocker.
 - Provide requested input, zoom, text, motion, audio, break, or pacing accommodations. Record the accommodation; never treat it as assistance.
 - Stop immediately if a route or recovery can become permanently unfinishable, local progress corrupts, or the interface makes a false wallet/token/earnings claim. Mark the cohort `HOLD` until repaired.
@@ -136,9 +141,11 @@ Critical issues:
 Disposition: PASS or HOLD
 ```
 
-Append the de-identified observation table, exact scored responses, assist log, issue list, and calculation. Link source/build/test evidence rather than restating it as usability proof.
+Append the de-identified observation table, independently resolved codes, consent-safe paraphrases, assist log, issue list, and calculation. Include a verbatim scored response only when separate quote-publication consent was recorded. Link source/build/test evidence rather than restating it as usability proof.
 
-Do not record audio, video, screen capture, keystrokes, analytics, account data, or wallet data for this gate. Keep de-identified raw worksheets only until the result and issue coding are independently checked, then delete them within 30 days. Retain the aggregate report and consent-safe de-identified quotes in the repository.
+Do not record audio, video, screen capture, keystrokes, analytics, account data, or wallet data for this gate. Keep raw worksheets encrypted or otherwise access-restricted outside the repository, available only to the facilitator and independent human coder. Keep the contact-to-study-ID linkage in a different recruiter-only encrypted store. Delete both within 30 days after the result and issue coding are independently checked, and record the deletion date in the aggregate report. Retain only the aggregate report, consent-safe paraphrases, and separately authorized de-identified quotes in the repository.
+
+Use the local evidence kit in [playtests/README.md](./playtests/README.md). Its validator checks candidate identity, the predeclared stopping rule, device/input quotas, dual coding, denominator math, and unresolved critical issues. Passing automated validation does not replace the human sessions or independent coding.
 
 ## After a pass
 

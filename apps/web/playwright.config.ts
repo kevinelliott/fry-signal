@@ -10,7 +10,9 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "pnpm exec next dev --hostname 127.0.0.1 --port 3027",
+    command: process.env.FRY_SIGNAL_E2E_PRODUCTION
+      ? "pnpm exec next start --hostname 127.0.0.1 --port 3027"
+      : "pnpm exec next dev --hostname 127.0.0.1 --port 3027",
     url: "http://127.0.0.1:3027",
     reuseExistingServer: false,
   },

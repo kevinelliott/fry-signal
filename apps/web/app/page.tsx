@@ -699,8 +699,8 @@ function HouseBook({ shift, onReplay }: { shift: ShiftState; onReplay: () => voi
       <div className="shift-postcard" aria-label="Local Shift Postcard">
         <div>
           <span>Local Shift Postcard</span>
-          <strong>{shift.faultCount === 0 ? "Rain route read clean" : `${shift.faultCount} wrong turn${shift.faultCount === 1 ? "" : "s"} cared for`}</strong>
-          <p>{result.dispatchedOrders} orders reached the window. This local postcard records how the shift ended.</p>
+          <strong>Midnight Merge complete</strong>
+          <p>This local postcard marks the end of this run.</p>
         </div>
         <button type="button" onClick={onReplay}>Run Midnight Merge again</button>
       </div>

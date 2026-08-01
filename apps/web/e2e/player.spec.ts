@@ -56,6 +56,13 @@ async function completeShift(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await page.route("**/*", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.hostname !== "127.0.0.1") {
+      throw new Error(`Walletless evidence journey attempted a non-loopback request: ${url.origin}`);
+    }
+    await route.continue();
+  });
   await page.goto("/");
   await page.getByText(/Saved locally/i).waitFor();
   await page.getByRole("button", { name: "Reset local shift" }).click();
@@ -116,7 +123,9 @@ test("all three waves settle into the reducer-derived House Book", async ({ page
   await expect(page.getByText(/Restaurant health margin/i)).toBeVisible();
   await expect(page.getByText(/Margin keeps Mile 42 healthy/i)).toBeVisible();
   await expect(page.getByText(/Tick 420 \/ 420/i)).toBeVisible();
-  await expect(page.getByText(/Rain route read clean/i)).toBeVisible();
+  const postcard = page.getByLabel("Local Shift Postcard");
+  await expect(postcard.getByText(/Midnight Merge complete/i)).toBeVisible();
+  await expect(postcard).not.toContainText(/route|gate|crossover|switch|recovery|batch|score|reward/i);
   await expect(page.getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
 });
 
