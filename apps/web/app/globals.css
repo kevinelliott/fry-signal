@@ -475,6 +475,19 @@ button:disabled {
   background: var(--pickle-green);
 }
 
+.mode-label.is-warning {
+  background: var(--pepper-red);
+}
+
+.mode-label.is-warning .pulse-dot {
+  border-radius: 1px;
+  background: var(--marquee-yellow);
+}
+
+.mode-label.is-safe {
+  background: var(--pickle-green);
+}
+
 .network {
   position: relative;
   min-height: 510px;
@@ -804,6 +817,17 @@ button:disabled {
   font-size: .72rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.route-readout.has-constraint div span {
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.route-readout.has-constraint .bent-arrow {
+  background: var(--marquee-yellow);
+  color: var(--ink);
 }
 
 .route-cost {
@@ -2315,6 +2339,61 @@ button:disabled {
 .house-book dd { margin: 0; font-variant-numeric: tabular-nums; }
 .house-book > p { grid-column: 1 / -1; margin: 0; color: #51483a; font-size: .7rem; text-align: right; }
 
+.shift-postcard {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding-top: 12px;
+  border-top: 2px dashed #857352;
+}
+
+.shift-postcard > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.shift-postcard span {
+  color: #5a5142;
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.shift-postcard strong {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-variation-settings: "opsz" 72;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.shift-postcard p {
+  max-width: 72ch;
+  margin: 0;
+  color: #51483a;
+  font-size: .72rem;
+  overflow-wrap: anywhere;
+}
+
+.shift-postcard button {
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 2px solid #111618;
+  border-radius: 4px;
+  background-color: #caa62f;
+  background-image: url("/materials/marquee-enamel.webp");
+  background-size: cover;
+  background-blend-mode: multiply;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 20%), 0 4px 0 rgb(0 0 0 / 38%);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 @media (max-width: 1180px) {
   .shift-progress,
   .house-book { margin-right: 402px; }
@@ -2336,10 +2415,13 @@ button:disabled {
   .shift-progress { padding: 8px; }
   .shift-progress button { min-height: 52px; }
   .house-book { padding: 11px; }
+  .shift-postcard { grid-template-columns: 1fr; }
+  .shift-postcard button { min-height: 52px; }
 }
 
 @media (forced-colors: active) {
   .shift-progress,
   .house-book,
-  .exception-empty { border-color: CanvasText; }
+  .exception-empty,
+  .shift-postcard button { border-color: CanvasText; }
 }

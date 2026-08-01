@@ -30,6 +30,10 @@ async function startShift(page: Page, keyboard = false) {
   }
 }
 
+async function advanceThroughArrival(page: Page, orderId: string) {
+  await page.getByRole("button", { name: new RegExp(`run next arrival · ${orderId}`, "i") }).click();
+}
+
 async function completeShift(page: Page) {
   for (let step = 0; step < 40; step += 1) {
     if (await page.getByText("Choice open", { exact: true }).isVisible().catch(() => false)) {
@@ -42,6 +46,9 @@ async function completeShift(page: Page) {
       continue;
     }
     const progress = page.getByRole("button", { name: /run next arrival|close service|settle shift/i });
+    if (/mm-05/i.test((await progress.textContent()) ?? "")) {
+      await page.getByRole("button", { name: /switch gate b toward pack b and window 2/i }).click();
+    }
     await progress.click();
     if (await page.getByRole("heading", { name: "House Book" }).isVisible().catch(() => false)) return;
   }
@@ -58,28 +65,45 @@ test("actual reducer recovery identity, options, and cost are keyboard-operable"
   await expect(page.getByRole("heading", { name: "Signal board" })).toBeVisible();
   await startShift(page, true);
 
-  const gate = page.getByRole("button", { name: /switch gate b/i });
-  await gate.focus();
-  await page.keyboard.press("Enter");
-  await expect(page.getByText("Line clear", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: /run next arrival · mm-01/i }).click();
+  for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04", "mm-05"]) {
+    await advanceThroughArrival(page, orderId);
+  }
 
   const rail = page.getByRole("complementary", { name: "Exception rail" });
   if (testInfo.project.name === "mobile") {
     const context = rail.getByLabel("Selected exception order and announced cause");
-    await expect(context).toContainText("mm-01");
-    await expect(context).toContainText("lane-1");
+    await expect(context).toContainText("mm-05");
+    await expect(context).toContainText("lane-2");
     await expect(context).toContainText("Route blocked");
   } else {
-    await expect(rail.getByText("mm-01", { exact: true })).toBeVisible();
-    await expect(rail.getByText("Lane 1 arrival", { exact: true })).toBeVisible();
+    await expect(rail.getByText("mm-05", { exact: true })).toBeVisible();
+    await expect(rail.getByText("Lane 2 arrival", { exact: true })).toBeVisible();
     await expect(rail.getByText("Route blocked", { exact: true })).toBeVisible();
   }
   const loopback = rail.getByRole("button", { name: /Loopback Save.*\+5 ticks.*−3 freshness.*\$1\.25/i });
   await loopback.focus();
   await page.keyboard.press("Enter");
   await expect(page.getByText("Resolved", { exact: true })).toBeVisible();
-  await expect(page.getByRole("group", { name: /mm-01 Tender Box resolved with Loopback Save/i })).toBeVisible();
+  await expect(page.getByRole("group", { name: /mm-05 Biscuit Basket resolved with Loopback Save/i })).toBeVisible();
+});
+
+test("the announced Rain Detour requires and rewards a real route switch", async ({ page }) => {
+  await startShift(page);
+  for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04"]) {
+    await advanceThroughArrival(page, orderId);
+  }
+
+  await expect(
+    page.getByRole("group", { name: /Rain Detour: Gate A is closed to new hot trays/i }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /switch gate b toward pack b and window 2/i }).click();
+  await expect(
+    page.getByRole("group", { name: /Rain Detour: hot trays are set to the safe Pack B crossover/i }),
+  ).toBeVisible();
+
+  await advanceThroughArrival(page, "mm-05");
+  await expect(page.getByText("Choice open", { exact: true })).not.toBeVisible();
+  await expect(page.getByLabel(/mm-05, Biscuit Basket, dispatched/i)).toBeVisible();
 });
 
 test("all three waves settle into the reducer-derived House Book", async ({ page }, testInfo) => {
@@ -92,6 +116,8 @@ test("all three waves settle into the reducer-derived House Book", async ({ page
   await expect(page.getByText(/Restaurant health margin/i)).toBeVisible();
   await expect(page.getByText(/Margin keeps Mile 42 healthy/i)).toBeVisible();
   await expect(page.getByText(/Tick 420 \/ 420/i)).toBeVisible();
+  await expect(page.getByText(/Rain route read clean/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
 });
 
 test("versioned local save resumes exactly and reset clears it", async ({ page }, testInfo) => {
@@ -138,17 +164,19 @@ test("the mobile board stays visible with three forecasts, real context, and fou
 test("reduced motion preserves the actual resolved route and costs", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await startShift(page);
-  await page.getByRole("button", { name: /switch gate b/i }).click();
-  await page.getByRole("button", { name: /run next arrival · mm-01/i }).click();
+  for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04", "mm-05"]) {
+    await advanceThroughArrival(page, orderId);
+  }
   await page.getByRole("button", { name: /Pull Forward.*\+7 ticks.*−2 freshness.*\$1\.75/i }).click();
-  await expect(page.getByRole("group", { name: /mm-01 Tender Box resolved with Pull Forward/i })).toBeVisible();
+  await expect(page.getByRole("group", { name: /mm-05 Biscuit Basket resolved with Pull Forward/i })).toBeVisible();
   await expect(page.getByText(/Applied · \+5t\/3 freshness or \+7t\/2 freshness/i)).toBeVisible();
 });
 
 test("captures the rebuilt authority surface", async ({ page }, testInfo) => {
   await startShift(page);
-  await page.getByRole("button", { name: /switch gate b/i }).click();
-  await page.getByRole("button", { name: /run next arrival · mm-01/i }).click();
+  for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04", "mm-05"]) {
+    await advanceThroughArrival(page, orderId);
+  }
   await expect(page.getByText("Choice open", { exact: true })).toBeVisible();
 
   const reviewDirectory = resolve(process.cwd(), "../../.impeccable/review");

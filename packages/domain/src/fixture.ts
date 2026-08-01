@@ -2,8 +2,8 @@ import type { ShiftFixture } from "./types.js";
 
 export const MIDNIGHT_MERGE = {
   id: "midnight-merge",
-  version: 1,
-  rulesVersion: 1,
+  version: 2,
+  rulesVersion: 2,
   label: "Midnight Merge",
   durationTicks: 420,
   meals: [
@@ -52,6 +52,7 @@ export const MIDNIGHT_MERGE = {
         signalLeadTicks: 10,
       },
       announcedConstraint: null,
+      topologyModifier: null,
       orders: [
         { id: "mm-01", arrivalTick: 20, lane: "lane-1", mealId: "tender-box" },
         { id: "mm-02", arrivalTick: 38, lane: "lane-2", mealId: "tender-box" },
@@ -70,7 +71,15 @@ export const MIDNIGHT_MERGE = {
         dominantMeals: ["biscuit-basket", "tender-box"],
         signalLeadTicks: 15,
       },
-      announcedConstraint: "Wet lane paint sends new hot trays through the selected crossover.",
+      announcedConstraint: "Pack A hot crossover closes from 02:00 to 03:50. Switch new hot trays to Pack B before arrival; a miss enters bounded recovery.",
+      topologyModifier: {
+        id: "rain-hot-crossover",
+        source: "hot",
+        blockedDestination: "pack-a",
+        safeDestination: "pack-b",
+        startsAtTick: 120,
+        endsAtTick: 230,
+      },
       orders: [
         { id: "mm-05", arrivalTick: 132, lane: "lane-2", mealId: "biscuit-basket" },
         { id: "mm-06", arrivalTick: 150, lane: "lane-1", mealId: "tender-box" },
@@ -91,6 +100,7 @@ export const MIDNIGHT_MERGE = {
         signalLeadTicks: 20,
       },
       announcedConstraint: null,
+      topologyModifier: null,
       orders: [
         { id: "mm-10", arrivalTick: 268, lane: "lane-1", mealId: "tender-box" },
         { id: "mm-11", arrivalTick: 285, lane: "lane-2", mealId: "night-bucket" },

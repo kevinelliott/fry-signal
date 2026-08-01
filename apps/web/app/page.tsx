@@ -240,7 +240,7 @@ function ForecastPanel({ viewedWave, currentWave, onRead }: { viewedWave: number
             key={wave.id}
             onClick={() => onRead(index)}
             aria-pressed={viewedWave === index}
-            aria-label={`Read road forecast: ${wave.label}, starts ${formatTick(wave.startsAtTick)}, ${range}`}
+            aria-label={`Read road forecast: ${wave.label}, starts ${formatTick(wave.startsAtTick)}, ${range}${wave.announcedConstraint ? `, ${wave.announcedConstraint}` : ""}`}
           >
             <span className="wave-index">{index + 1}</span>
             <span className="wave-copy">
@@ -296,7 +296,7 @@ function MobileForecast({
         <span>{expanded ? "Close" : "All waves"}</span>
       </button>
       <span>{formatTick(selectedWave.startsAtTick)} · {selectedWave.forecast.minimumOrders}–{selectedWave.forecast.maximumOrders} orders</span>
-      <span>{waveVisuals[selectedWave.id].cue}</span>
+      <span>{waveVisuals[selectedWave.id].cue}{selectedWave.announcedConstraint ? ` · ${selectedWave.announcedConstraint}` : ""}</span>
       <div
         id="mobile-road-forecast"
         role="region"
@@ -326,26 +326,35 @@ function MobileForecast({
 function RouteBoard({
   activeGate,
   onGate,
-  currentWave,
+  focusWave,
+  focusIsUpcoming,
   shift,
   offer,
   canSwitch,
 }: {
   activeGate: GateId;
   onGate: (gate: GateId) => void;
-  currentWave: number;
+  focusWave: number;
+  focusIsUpcoming: boolean;
   shift: ShiftState;
   offer: RecoveryOffer | null;
   canSwitch: boolean;
 }) {
-  const selectedWave = MIDNIGHT_MERGE.waves[currentWave] ?? MIDNIGHT_MERGE.waves[0];
+  const selectedWave = MIDNIGHT_MERGE.waves[focusWave] ?? MIDNIGHT_MERGE.waves[0];
+  const modifier = selectedWave.topologyModifier;
+  const routeNeedsAttention =
+    modifier !== null && shift.routeBoard[modifier.source] === modifier.blockedDestination;
   const relatedOrder = offer ? shift.orders.find((order) => order.id === offer.orderId) : undefined;
   const relatedMeal = relatedOrder ? mealById.get(relatedOrder.mealId) : undefined;
   const resolvedAction = offer?.resolvedAction ?? null;
   const routeLabel = relatedOrder && resolvedAction
     ? `${relatedOrder.id} ${relatedMeal?.label ?? relatedOrder.mealId} resolved with ${actionCopy(resolvedAction).label}`
-    : relatedOrder
-      ? `${relatedOrder.id} ${relatedMeal?.label ?? relatedOrder.mealId} is ${causeCopy(offer!.cause).label.toLowerCase()}`
+      : relatedOrder
+        ? `${relatedOrder.id} ${relatedMeal?.label ?? relatedOrder.mealId} is ${causeCopy(offer!.cause).label.toLowerCase()}`
+        : modifier && routeNeedsAttention
+          ? `${selectedWave.label}: Gate A is closed to new hot trays. Switch Gate B before the next arrival.`
+          : modifier
+            ? `${selectedWave.label}: hot trays are set to the safe Pack B crossover.`
       : `Ghost route preview from hot hold through ${activeGate} to automatic packout`;
   const inventory = (component: string) => shift.batches
     .filter((batch) => batch.component === component && batch.state === "AVAILABLE")
@@ -357,9 +366,12 @@ function RouteBoard({
       <div className="board-heading">
         <div>
           <h2 id="route-title">Signal board</h2>
-          <p>Current: {selectedWave.label} · {waveVisuals[selectedWave.id].cue}</p>
+          <p>{focusIsUpcoming ? "Next decision" : "Current"}: {selectedWave.label} · {waveVisuals[selectedWave.id].cue}</p>
         </div>
-        <span className="mode-label"><span className="pulse-dot" /> Preview ready</span>
+        <span className={`mode-label ${routeNeedsAttention ? "is-warning" : modifier ? "is-safe" : ""}`}>
+          <span className="pulse-dot" />
+          {routeNeedsAttention ? "Detour needs Gate B" : modifier ? "Detour covered" : "Preview ready"}
+        </span>
       </div>
 
       <div className="network" role="group" aria-label={routeLabel}>
@@ -409,7 +421,7 @@ function RouteBoard({
           className={`gate gate-a ${activeGate === "GATE A" ? "is-selected" : ""}`}
           onClick={() => onGate("GATE A")}
           aria-pressed={activeGate === "GATE A"}
-          aria-label="Switch Gate A toward Window 2"
+          aria-label="Switch Gate A toward Pack A and Window 1"
           disabled={!canSwitch}
         >
           <span className="lever" />
@@ -419,7 +431,7 @@ function RouteBoard({
           className={`gate gate-b ${activeGate === "GATE B" ? "is-selected" : ""}`}
           onClick={() => onGate("GATE B")}
           aria-pressed={activeGate === "GATE B"}
-          aria-label="Switch Gate B toward the Rescue Spur"
+          aria-label="Switch Gate B toward Pack B and Window 2"
           disabled={!canSwitch}
         >
           <span className="lever" />
@@ -447,13 +459,13 @@ function RouteBoard({
         <div className="window window-two"><span>Window</span><strong>2</strong><small>Lane B</small></div>
       </div>
 
-      <div className="route-readout" aria-live="polite">
+      <div className={`route-readout ${modifier ? "has-constraint" : ""}`} aria-live="polite">
         <span className="bent-arrow" aria-hidden="true"><UtilityIcon kind="bend" /></span>
         <div>
-          <strong>{resolvedAction ? "Recovery committed" : offer?.state === "OFFERED" ? "Exception needs care" : "Ghost pulse preview"}</strong>
+          <strong>{resolvedAction ? "Recovery committed" : offer?.state === "OFFERED" ? "Exception needs care" : modifier ? "Announced route constraint" : "Ghost pulse preview"}</strong>
           <span>{routeLabel}</span>
         </div>
-        <span className="route-cost">{offer ? `${offer.state === "RESOLVED" ? "Applied" : "Choice"} · ${offer.costs.map((cost) => `+${cost.timeCostTicks}t/${cost.freshnessCost} freshness`).join(" or ")}` : "No cost until applied"}</span>
+        <span className="route-cost">{offer ? `${offer.state === "RESOLVED" ? "Applied" : "Choice"} · ${offer.costs.map((cost) => `+${cost.timeCostTicks}t/${cost.freshnessCost} freshness`).join(" or ")}` : modifier ? `Gate A closed ${formatTick(modifier.startsAtTick)}–${formatTick(modifier.endsAtTick)} · Gate B safe` : "No cost until applied"}</span>
       </div>
     </section>
   );
@@ -659,7 +671,7 @@ function ShiftProgress({
   );
 }
 
-function HouseBook({ shift }: { shift: ShiftState }) {
+function HouseBook({ shift, onReplay }: { shift: ShiftState; onReplay: () => void }) {
   if (!shift.result) return null;
   const { ledger, result } = shift;
   const health = result.health.replaceAll("_", " ").toLowerCase();
@@ -684,6 +696,14 @@ function HouseBook({ shift }: { shift: ShiftState }) {
         <div className="margin"><dt>Restaurant health margin</dt><dd>{formatMoney(ledger.marginCents)}</dd></div>
       </dl>
       <p>Margin keeps Mile 42 healthy; it is not a transferable reward.</p>
+      <div className="shift-postcard" aria-label="Local Shift Postcard">
+        <div>
+          <span>Local Shift Postcard</span>
+          <strong>{shift.faultCount === 0 ? "Rain route read clean" : `${shift.faultCount} wrong turn${shift.faultCount === 1 ? "" : "s"} cared for`}</strong>
+          <p>{result.dispatchedOrders} orders reached the window. Try the route again to test a different crossover or batch posture.</p>
+        </div>
+        <button type="button" onClick={onReplay}>Run Midnight Merge again</button>
+      </div>
     </section>
   );
 }
@@ -719,7 +739,7 @@ export default function Home() {
     setShift((current) => commands.reduce((state, command) => reduceShift(state, command), current));
   };
 
-  const activeGate: GateId = shift.routeBoard.hot === "loopback" ? "GATE B" : "GATE A";
+  const activeGate: GateId = shift.routeBoard.hot === "pack-b" ? "GATE B" : "GATE A";
   const committed = shift.batches.length > 0;
   const openOffer = shift.recoveries.find((offer) => offer.state === "OFFERED") ?? null;
   const latestOffer = openOffer ?? shift.recoveries.at(-1) ?? null;
@@ -728,17 +748,18 @@ export default function Home() {
     return Math.max(0, index);
   }, [shift.tick]);
   const nextArrival = useMemo(() => {
-    const planned: Array<{ id: string; arrivalTick: number }> = [];
-    for (const wave of MIDNIGHT_MERGE.waves) {
-      for (const order of wave.orders) planned.push({ id: order.id, arrivalTick: order.arrivalTick });
+    const planned: Array<{ id: string; arrivalTick: number; waveIndex: number }> = [];
+    for (const [waveIndex, wave] of MIDNIGHT_MERGE.waves.entries()) {
+      for (const order of wave.orders) planned.push({ id: order.id, arrivalTick: order.arrivalTick, waveIndex });
     }
     return planned.find((order) => order.arrivalTick > shift.tick) ?? null;
   }, [shift.tick]);
+  const focusWave = nextArrival?.waveIndex ?? currentWave;
 
   const activeStage = useMemo(() => shift.result ? 2 : shift.orders.length > 0 ? 2 : committed ? 1 : 0, [committed, shift.orders.length, shift.result]);
 
   const switchGate = (gate: GateId) => {
-    const destination = gate === "GATE B" ? "loopback" : "pack-a";
+    const destination = gate === "GATE B" ? "pack-b" : "pack-a";
     dispatchDomain([{
       type: "SWITCH",
       commandId: `switch:${shift.tick}:${shift.routeBoard.revision + 1}:${gate}`,
@@ -842,7 +863,7 @@ export default function Home() {
 
       <div className="playfield">
         <ForecastPanel viewedWave={viewedWave} currentWave={currentWave} onRead={readWave} />
-        <RouteBoard activeGate={activeGate} onGate={switchGate} currentWave={currentWave} shift={shift} offer={latestOffer} canSwitch={committed && shift.phase !== "SETTLED"} />
+        <RouteBoard activeGate={activeGate} onGate={switchGate} focusWave={focusWave} focusIsUpcoming={focusWave !== currentWave} shift={shift} offer={latestOffer} canSwitch={committed && shift.phase !== "SETTLED"} />
         <ExceptionRail shift={shift} offer={latestOffer} onRecover={recoverOrder} />
       </div>
 
@@ -863,7 +884,7 @@ export default function Home() {
         snapshotReady={snapshotReady}
       />
       <ServiceStrip shift={shift} />
-      <HouseBook shift={shift} />
+      <HouseBook shift={shift} onReplay={resetShift} />
       <p className="keyboard-help">Keyboard: Tab to read a wave, commit a batch, switch a gate, or choose a recovery. Enter or Space applies the focused control.</p>
     </main>
   );

@@ -27,6 +27,7 @@ Maintain authored fixtures for:
 
 - clean three-wave run;
 - announced route constraint plus each valid recovery;
+- announced route constraint avoided by the disclosed safe route, including switch timing boundaries;
 - intentionally induced recovery-farming attempt;
 - pause/background/reload at every state boundary;
 - mobile and desktop command streams producing the same result;
@@ -40,6 +41,7 @@ Run replay fixtures in the pure domain package and supported browser build. Fram
 - forecast ranges contain every possible arrival and order family;
 - tutorial recovery is announced or unscored; no surprise sabotage fixture;
 - route topology is reachable and every bottleneck has at least one bounded recovery;
+- topology modifiers use structured source, blocked/safe destination, and tick-window fields; display prose cannot change authority;
 - event pairs are reviewed and cannot form hidden chaos or an impossible load;
 - every critical signal includes stable position, text label, shape/pattern, and accessible name;
 - menu entries include component, allergen/dietary, holding, cost, and failure-conversion data;
@@ -53,6 +55,7 @@ Run replay fixtures in the pure domain package and supported browser build. Fram
 - unknown version and digest mismatch fail visibly;
 - all Phase 1 journeys pass with network interception configured to reject every request;
 - local results contain no fixture/transfer entitlement and cannot be imported as server-verified evidence.
+- saving and restoring during an active topology modifier preserves the selected route, modifier window, recovery truth, and replay digest.
 
 When shared persistence is later approved, add transaction rollback, stale revision, duplicate/changed-payload idempotency keys, concurrent commands, snapshot rebuild, session expiry, guest/account merge, deletion/export, and server replay rejection of forged totals or reordered inputs.
 

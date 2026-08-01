@@ -39,6 +39,15 @@ export interface OrderPlan {
   readonly mealId: MealDefinition["id"];
 }
 
+export interface TopologyModifier {
+  readonly id: "rain-hot-crossover";
+  readonly source: SourceId;
+  readonly blockedDestination: DestinationId;
+  readonly safeDestination: DestinationId;
+  readonly startsAtTick: Tick;
+  readonly endsAtTick: Tick;
+}
+
 export interface WaveDefinition {
   readonly id: "commuter-drift" | "rain-detour" | "arena-let-out";
   readonly label: string;
@@ -46,13 +55,14 @@ export interface WaveDefinition {
   readonly endsAtTick: Tick;
   readonly forecast: ForecastRange;
   readonly announcedConstraint: string | null;
+  readonly topologyModifier: TopologyModifier | null;
   readonly orders: readonly OrderPlan[];
 }
 
 export interface ShiftFixture {
   readonly id: "midnight-merge";
-  readonly version: 1;
-  readonly rulesVersion: 1;
+  readonly version: 2;
+  readonly rulesVersion: 2;
   readonly label: string;
   readonly durationTicks: Tick;
   readonly meals: readonly MealDefinition[];

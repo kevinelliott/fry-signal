@@ -23,6 +23,7 @@ import type {
   ShiftResult,
   ShiftState,
   Tick,
+  TopologyModifier,
   WaveDefinition,
 } from "./types.js";
 
@@ -121,6 +122,19 @@ function hasBlockedRoute(route: RouteSnapshot): boolean {
   return route.hot === "loopback" || route.cold === "loopback" || route.drink === "loopback";
 }
 
+function modifierBlocksRoute(
+  route: RouteSnapshot,
+  arrivalTick: Tick,
+  modifier: TopologyModifier | null,
+): boolean {
+  if (modifier === null) return false;
+  return (
+    arrivalTick >= modifier.startsAtTick &&
+    arrivalTick <= modifier.endsAtTick &&
+    route[modifier.source] === modifier.blockedDestination
+  );
+}
+
 function offerFor(order: OrderTicket, cause: RecoveryOffer["cause"]): RecoveryOffer {
   const routeBlocked = cause === "ROUTE_BLOCKED";
   const costs: readonly RecoveryActionCost[] = routeBlocked
@@ -145,9 +159,14 @@ function offerFor(order: OrderTicket, cause: RecoveryOffer["cause"]): RecoveryOf
 
 function allPlannedOrders(fixture: ShiftFixture): readonly (WaveDefinition["orders"][number] & {
   readonly waveId: WaveDefinition["id"];
+  readonly topologyModifier: TopologyModifier | null;
 })[] {
   return fixture.waves.flatMap((wave) =>
-    wave.orders.map((order) => ({ ...order, waveId: wave.id })),
+    wave.orders.map((order) => ({
+      ...order,
+      waveId: wave.id,
+      topologyModifier: wave.topologyModifier,
+    })),
   );
 }
 
@@ -262,7 +281,9 @@ function arriveOrders(state: ShiftState, fixture: ShiftFixture): ShiftState {
   for (const planned of allPlannedOrders(fixture)) {
     if (planned.arrivalTick > next.tick || arrivedIds.has(planned.id)) continue;
     const snapshot = routeSnapshot(next.routeBoard);
-    const blocked = hasBlockedRoute(snapshot);
+    const blocked =
+      hasBlockedRoute(snapshot) ||
+      modifierBlocksRoute(snapshot, planned.arrivalTick, planned.topologyModifier);
     const ticket: OrderTicket = {
       id: planned.id,
       waveId: planned.waveId,
@@ -499,6 +520,13 @@ function settle(state: ShiftState, fixture: ShiftFixture): ShiftState {
   if (state.phase !== "FINAL_RECOVERY" || state.tick !== fixture.durationTicks || state.paused) {
     throw new Error("Shift cannot settle before the final recovery window");
   }
+  const terminalOrders = state.orders.filter(
+    (order) => order.state === "DISPATCHED" || order.state === "RESOLVED_WITH_CARE",
+  );
+  const hasOpenRecovery = state.recoveries.some((recovery) => recovery.state === "OFFERED");
+  if (terminalOrders.length !== allPlannedOrders(fixture).length || hasOpenRecovery) {
+    throw new Error("Shift cannot settle while an order or recovery remains open");
+  }
   const entries = [...state.ledger.entries, ...retirementEntries(state)].filter(
     (entry, index, all) => all.findIndex((candidate) => candidate.id === entry.id) === index,
   );
@@ -717,6 +745,16 @@ function validateState(candidate: unknown, fixture: ShiftFixture = MIDNIGHT_MERG
     if (state.tick !== fixture.durationTicks || !state.forecastRead || state.paused || state.result === null) {
       throw new Error("Settled shift lifecycle is inconsistent");
     }
+    const allOrdersTerminal = state.orders.every(
+      (order) => order.state === "DISPATCHED" || order.state === "RESOLVED_WITH_CARE",
+    );
+    if (
+      state.orders.length !== allPlannedOrders(fixture).length ||
+      !allOrdersTerminal ||
+      state.recoveries.some((recovery) => recovery.state === "OFFERED")
+    ) {
+      throw new Error("Settled shift contains unfinished service");
+    }
   } else {
     if (state.result !== null) throw new Error("Only a settled shift may contain a result");
     if (state.phase !== currentPhase(state.tick, fixture, state.forecastRead)) {
@@ -857,6 +895,8 @@ function validateState(candidate: unknown, fixture: ShiftFixture = MIDNIGHT_MERG
     recoveryIds.add(recovery.id);
     const order = state.orders.find((candidate) => candidate.id === recovery.orderId);
     if (order === undefined) throw new Error(`Recovery references missing order: ${recovery.id}`);
+    const planned = plannedById.get(order.id);
+    if (planned === undefined) throw new Error(`Recovery references unknown order: ${recovery.id}`);
     assertEnum(recovery.cause, RECOVERY_CAUSES, `recovery ${recovery.id}.cause`);
     assertArray(recovery.actions, `recovery ${recovery.id}.actions`);
     recovery.actions.forEach((action, actionIndex) =>
@@ -877,6 +917,14 @@ function validateState(candidate: unknown, fixture: ShiftFixture = MIDNIGHT_MERG
       canonicalize(recovery.costs) !== canonicalize(expected.costs)
     ) {
       throw new Error(`Recovery terms do not match policy: ${recovery.id}`);
+    }
+    if (
+      recovery.cause === "ROUTE_BLOCKED" &&
+      recovery.state === "OFFERED" &&
+      !hasBlockedRoute(order.routeSnapshot) &&
+      !modifierBlocksRoute(order.routeSnapshot, planned.arrivalTick, planned.topologyModifier)
+    ) {
+      throw new Error(`Route recovery has no authoritative blocker: ${recovery.id}`);
     }
     if (recovery.state !== "OFFERED" && recovery.state !== "RESOLVED") {
       throw new Error(`Recovery state is invalid: ${recovery.id}`);
@@ -904,6 +952,23 @@ function validateState(candidate: unknown, fixture: ShiftFixture = MIDNIGHT_MERG
       order.freshnessPenalty !== costs.freshness
     ) {
       throw new Error(`Order recovery costs do not reconcile: ${order.id}`);
+    }
+    const planned = plannedById.get(order.id);
+    if (planned === undefined) throw new Error(`Unknown order during route validation: ${order.id}`);
+    const shouldHaveRouteRecovery =
+      hasBlockedRoute(order.routeSnapshot) ||
+      modifierBlocksRoute(order.routeSnapshot, planned.arrivalTick, planned.topologyModifier);
+    const hasRouteRecovery = state.recoveries.some(
+      (recovery) => recovery.orderId === order.id && recovery.cause === "ROUTE_BLOCKED",
+    );
+    const hasOpenRouteRecovery = state.recoveries.some(
+      (recovery) =>
+        recovery.orderId === order.id &&
+        recovery.cause === "ROUTE_BLOCKED" &&
+        recovery.state === "OFFERED",
+    );
+    if ((shouldHaveRouteRecovery && !hasRouteRecovery) || (!shouldHaveRouteRecovery && hasOpenRouteRecovery)) {
+      throw new Error(`Order route recovery does not match authoritative topology: ${order.id}`);
     }
   }
   if (state.faultCount !== state.recoveries.filter((recovery) => recovery.cause === "ROUTE_BLOCKED").length) {
