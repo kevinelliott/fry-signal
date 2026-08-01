@@ -1,0 +1,22 @@
+{
+  "name": "fry-signal",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @fry-signal/web dev",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter @fry-signal/web start",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:unit": "pnpm --filter @fry-signal/domain test",
+    "test:e2e": "pnpm --filter @fry-signal/web test:e2e",
+    "test:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+    "tezos:localnet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs localnet",
+    "tezos:shadownet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs shadownet"
+  }
+}
