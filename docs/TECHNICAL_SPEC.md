@@ -26,7 +26,8 @@ Suggested types:
 ```text
 ContentBundle { id, version, contentHash, menuRefs, waveRefs, recoveryRefs }
 ShiftSession { id, reducerVersion, contentVersion, seed, revision, tick, state }
-TrafficWave { index, forecast, revealedDemand, modifier, state }
+TrafficWave { index, forecast, revealedDemand, topologyModifier, state }
+TopologyModifier { id, source, blockedDestination, safeDestination, startsAtTick, endsAtTick }
 OrderTicket { id, wave, lane, items, state }
 CookBatch { id, itemRef, committedQty, availableQty, readyTick, retireTick, state }
 RouteBoard { topologyVersion, gateStates, nodeQueues }
@@ -40,6 +41,8 @@ PlayerProgress { revision, unlockedTopologies, storyDecks, expression }
 Commands are limited to the canonical verbs: `StartShift`, `CommitPlan`, `CommitBatch`, `FlipGate`, `SelectRecovery`, `ReleaseNextWave`, `CloseShift`, and `AbandonShift`. Ordinary packout and dispatch are reducer consequences; manual correction is an explicit recovery command.
 
 The reducer uses integer ticks, quantities, and cents. Frame time, `Date.now()`, floating-point money, wallet state, RPC, indexer data, token prices, and remote content never influence outcomes.
+
+Announced route constraints are structured content, never parsed from display copy. A topology modifier names the affected source, blocked destination, safe destination, and inclusive tick window. Each arriving order captures the route board at that moment, so a switch affects only newly arriving trays. A blocked snapshot creates one bounded recovery offer; choosing the disclosed safe route avoids that recovery without changing demand.
 
 ## Determinism and persistence
 
@@ -64,6 +67,7 @@ Phase 1 rules:
 6. A profitable shift can fail service and crew/equipment gates.
 7. Owned assets are absent from the reducer; mistakes and failed shifts cannot mutate ownership.
 8. Network availability cannot change Phase 1 play, save, progression, or debrief.
+9. Route-blocked recovery exists if and only if an order snapshot uses a physically blocked path or violates its wave's structured topology modifier.
 
 ## UI architecture
 

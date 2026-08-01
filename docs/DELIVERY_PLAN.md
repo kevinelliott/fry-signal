@@ -28,6 +28,7 @@ Exit:
 - the board proves the core sentence without art, story, or crypto;
 - no mandatory idle interval exceeds five seconds;
 - every bottleneck has a one-move recovery;
+- the announced Rain Detour requires a real, non-color-only route decision: the disclosed safe gate avoids recovery and a missed switch creates exactly one bounded terminal recovery;
 - recovery is non-farmable and tutorial recovery comes from an announced constraint or unscored beat;
 - deterministic, responsive, accessibility, local persistence, and abuse gates pass with networking disabled;
 - moderated targets in [GAME_DESIGN_SPEC.md](./GAME_DESIGN_SPEC.md) are met.

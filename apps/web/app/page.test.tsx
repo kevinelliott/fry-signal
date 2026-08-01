@@ -14,6 +14,10 @@ async function readAndCommit(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: /commit opening batch/i }));
 }
 
+async function advanceThroughArrival(user: ReturnType<typeof userEvent.setup>, orderId: string) {
+  await user.click(screen.getByRole("button", { name: new RegExp(`run next arrival · ${orderId}`, "i") }));
+}
+
 describe("Midnight Merge player surface", () => {
   it("keeps commit, switches, and service progress unavailable until the forecast is read", async () => {
     const user = userEvent.setup();
@@ -47,14 +51,14 @@ describe("Midnight Merge player surface", () => {
     render(<Home />);
     await readAndCommit(user);
 
-    await user.click(screen.getByRole("button", { name: /switch gate b/i }));
-    expect(screen.getByText("Line clear")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /run next arrival · mm-01/i }));
+    for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04", "mm-05"]) {
+      await advanceThroughArrival(user, orderId);
+    }
 
     expect(screen.getByText("Choice open")).toBeInTheDocument();
-    expect(screen.getAllByText(/mm-01/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Tender Box/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Lane 1 arrival/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/mm-05/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Biscuit Basket/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Lane 2 arrival/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Route blocked/i).length).toBeGreaterThan(0);
     const loopback = screen.getByRole("button", { name: /Loopback Save.*\+5 ticks.*−3 freshness.*\$1\.25/i });
     await user.click(loopback);
@@ -62,6 +66,28 @@ describe("Midnight Merge player surface", () => {
     expect(screen.getAllByText(/resolved with Loopback Save/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/\+5t/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/−3/).length).toBeGreaterThan(0);
+  });
+
+  it("makes the announced Rain Detour require a real route choice", async () => {
+    const user = userEvent.setup();
+    render(<Home />);
+    await readAndCommit(user);
+
+    for (const orderId of ["mm-01", "mm-02", "mm-03", "mm-04"]) {
+      await advanceThroughArrival(user, orderId);
+    }
+
+    expect(
+      screen.getByRole("group", { name: /Rain Detour: Gate A is closed to new hot trays/i }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /switch gate b toward pack b and window 2/i }));
+    expect(
+      screen.getByRole("group", { name: /Rain Detour: hot trays are set to the safe Pack B crossover/i }),
+    ).toBeInTheDocument();
+
+    await advanceThroughArrival(user, "mm-05");
+    expect(screen.queryByText("Choice open")).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/mm-05, Biscuit Basket, dispatched/i)).toBeInTheDocument();
   });
 
   it("progresses all three deterministic waves and settles a reducer-derived House Book", async () => {
@@ -83,6 +109,9 @@ describe("Midnight Merge player surface", () => {
         }
       }
       const progress = screen.getByRole("button", { name: /run next arrival|close service|settle shift/i });
+      if (/mm-05/i.test(progress.textContent ?? "")) {
+        await user.click(screen.getByRole("button", { name: /switch gate b toward pack b and window 2/i }));
+      }
       await user.click(progress);
       if (screen.queryByRole("heading", { name: "House Book" })) break;
     }
@@ -92,6 +121,8 @@ describe("Midnight Merge player surface", () => {
     expect(screen.getByText(/Restaurant health margin/i)).toBeInTheDocument();
     expect(screen.getByText(/Margin keeps Mile 42 healthy/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Arena Let-Out/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Rain route read clean/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
   });
 
   it("restores the versioned local snapshot without overwriting it during hydration", async () => {

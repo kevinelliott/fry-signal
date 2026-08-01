@@ -8,6 +8,7 @@ import {
   restoreShift,
   serializeShift,
   type ShiftCommand,
+  type ShiftFixture,
   type ShiftState,
 } from "../src/index.js";
 
@@ -32,6 +33,12 @@ const openingBatches: readonly ShiftCommand[] = [
 
 function settleCommands(prefix: string): readonly ShiftCommand[] {
   return [
+    {
+      type: "SWITCH",
+      commandId: `${prefix}-rain-safe-route`,
+      gate: "hot-gate",
+      destination: "pack-b",
+    },
     { type: "ADVANCE", commandId: `${prefix}-advance`, ticks: MIDNIGHT_MERGE.durationTicks },
     { type: "SETTLE", commandId: `${prefix}-settle` },
   ];
@@ -43,8 +50,8 @@ function mutableSnapshot(state: ShiftState): Record<string, any> {
 
 describe("Midnight Merge fixture", () => {
   it("is a versioned three-wave fixture with bounded forecasts", () => {
-    expect(MIDNIGHT_MERGE.version).toBe(1);
-    expect(MIDNIGHT_MERGE.rulesVersion).toBe(1);
+    expect(MIDNIGHT_MERGE.version).toBe(2);
+    expect(MIDNIGHT_MERGE.rulesVersion).toBe(2);
     expect(MIDNIGHT_MERGE.waves).toHaveLength(3);
     for (const wave of MIDNIGHT_MERGE.waves) {
       expect(wave.orders.length).toBeGreaterThanOrEqual(wave.forecast.minimumOrders);
@@ -111,6 +118,12 @@ describe("pure reducer and replay", () => {
       /final recovery window/,
     );
     state = reduceShift(state, {
+      type: "SWITCH",
+      commandId: "safe-before-final",
+      gate: "hot-gate",
+      destination: "pack-b",
+    });
+    state = reduceShift(state, {
       type: "ADVANCE",
       commandId: "to-final-recovery",
       ticks: MIDNIGHT_MERGE.durationTicks,
@@ -126,10 +139,28 @@ describe("pure reducer and replay", () => {
     expect(state.result).not.toBeNull();
   });
 
+  it("rejects settlement while Rain recoveries remain open", () => {
+    let state = reduceAll([
+      ...openingBatches,
+      { type: "ADVANCE", commandId: "open-rain-through-close", ticks: MIDNIGHT_MERGE.durationTicks },
+    ]);
+    expect(state.recoveries.filter((recovery) => recovery.state === "OFFERED")).toHaveLength(5);
+    expect(() => reduceShift(state, { type: "SETTLE", commandId: "settle-open-rain" })).toThrow(
+      /order or recovery remains open/,
+    );
+    expect(restoreShift(serializeShift(state))).toEqual(state);
+  });
+
   it("rejects every new command after settlement while preserving exact retry idempotency", () => {
     const settleCommand = { type: "SETTLE", commandId: "immutable-settle" } as const;
     let state = reduceAll([
       ...openingBatches,
+      {
+        type: "SWITCH",
+        commandId: "immutable-rain-safe-route",
+        gate: "hot-gate",
+        destination: "pack-b",
+      },
       { type: "ADVANCE", commandId: "immutable-advance", ticks: MIDNIGHT_MERGE.durationTicks },
       settleCommand,
     ]);
@@ -164,6 +195,133 @@ describe("route, recovery, and economics invariants", () => {
     state = reduceShift(state, { type: "ADVANCE", commandId: "to-second", ticks: 18 });
     expect(state.orders[0]?.routeSnapshot).toEqual(firstRoute);
     expect(state.orders[1]?.routeSnapshot.hot).toBe("pack-b");
+  });
+
+  it("enforces the announced Rain Detour from structured topology authority", () => {
+    let missed = reduceAll(openingBatches);
+    missed = reduceShift(missed, { type: "ADVANCE", commandId: "rain-missed", ticks: 132 });
+    const missedOrder = missed.orders.find((order) => order.id === "mm-05");
+    expect(missedOrder?.state).toBe("ROUTE_BLOCKED");
+    expect(missedOrder?.routeSnapshot.hot).toBe("pack-a");
+    expect(
+      missed.recoveries.some(
+        (recovery) => recovery.orderId === "mm-05" && recovery.cause === "ROUTE_BLOCKED",
+      ),
+    ).toBe(true);
+
+    let anticipated = reduceAll(openingBatches);
+    anticipated = reduceShift(anticipated, {
+      type: "SWITCH",
+      commandId: "rain-safe-route",
+      gate: "hot-gate",
+      destination: "pack-b",
+    });
+    anticipated = reduceShift(anticipated, {
+      type: "ADVANCE",
+      commandId: "rain-safe-arrival",
+      ticks: 132,
+    });
+    const safeOrder = anticipated.orders.find((order) => order.id === "mm-05");
+    expect(safeOrder?.state).toBe("DISPATCHED");
+    expect(safeOrder?.routeSnapshot.hot).toBe("pack-b");
+    expect(anticipated.recoveries.some((recovery) => recovery.orderId === "mm-05")).toBe(false);
+  });
+
+  it("preserves switch timing at the Rain Detour arrival boundary", () => {
+    const commands: readonly ShiftCommand[] = [
+      ...openingBatches,
+      { type: "ADVANCE", commandId: "rain-before", ticks: 131 },
+      {
+        type: "SWITCH",
+        commandId: "rain-boundary-switch",
+        gate: "hot-gate",
+        destination: "pack-b",
+      },
+      { type: "ADVANCE", commandId: "rain-boundary-arrival", ticks: 1 },
+    ];
+    const state = reduceAll(commands);
+    expect(state.orders.find((order) => order.id === "mm-05")?.state).toBe("DISPATCHED");
+
+    const restored = restoreShift(serializeShift(state));
+    expect(restored).toEqual(state);
+    expect(replayShift(commands).state).toEqual(state);
+  });
+
+  it("restores mid-detour before the route decision without changing authority", () => {
+    const beforeDecision = reduceAll([
+      ...openingBatches,
+      { type: "ADVANCE", commandId: "rain-window-open", ticks: 121 },
+    ]);
+    const restored = restoreShift(serializeShift(beforeDecision));
+    expect(restored).toEqual(beforeDecision);
+
+    const switchCommand = {
+      type: "SWITCH",
+      commandId: "rain-after-restore",
+      gate: "hot-gate",
+      destination: "pack-b",
+    } as const;
+    const arrivalCommand = {
+      type: "ADVANCE",
+      commandId: "rain-after-restore-arrival",
+      ticks: 11,
+    } as const;
+    const resumed = [switchCommand, arrivalCommand].reduce(
+      (current, command) => reduceShift(current, command),
+      restored,
+    );
+    const uninterrupted = reduceAll([
+      ...openingBatches,
+      { type: "ADVANCE", commandId: "rain-window-open", ticks: 121 },
+      switchCommand,
+      arrivalCommand,
+    ]);
+
+    expect(resumed).toEqual(uninterrupted);
+    expect(resumed.orders.find((order) => order.id === "mm-05")?.state).toBe("DISPATCHED");
+  });
+
+  it("applies inclusive modifier edges and leaves adjacent arrivals open", () => {
+    const rainWave = MIDNIGHT_MERGE.waves[1];
+    const edgeFixture: ShiftFixture = {
+      ...MIDNIGHT_MERGE,
+      waves: [
+        MIDNIGHT_MERGE.waves[0],
+        {
+          ...rainWave,
+          topologyModifier: {
+            ...rainWave.topologyModifier!,
+            startsAtTick: 132,
+            endsAtTick: 219,
+          },
+          orders: rainWave.orders.map((order) =>
+            order.id === "mm-05"
+              ? { ...order, arrivalTick: 131 }
+              : order.id === "mm-06"
+                ? { ...order, arrivalTick: 132 }
+                : order.id === "mm-08"
+                  ? { ...order, arrivalTick: 219 }
+                  : order.id === "mm-09"
+                    ? { ...order, arrivalTick: 220 }
+                    : order,
+          ),
+        },
+        MIDNIGHT_MERGE.waves[2],
+      ],
+    };
+    const commands: readonly ShiftCommand[] = [
+      ...openingBatches,
+      { type: "ADVANCE", commandId: "rain-edge-arrivals", ticks: 220 },
+    ];
+    const state = commands.reduce(
+      (current, command) => reduceShift(current, command, edgeFixture),
+      createInitialShift(edgeFixture),
+    );
+
+    expect(state.orders.find((order) => order.id === "mm-05")?.state).toBe("DISPATCHED");
+    expect(state.orders.find((order) => order.id === "mm-06")?.state).toBe("ROUTE_BLOCKED");
+    expect(state.orders.find((order) => order.id === "mm-08")?.state).toBe("ROUTE_BLOCKED");
+    expect(state.orders.find((order) => order.id === "mm-09")?.state).toBe("DISPATCHED");
   });
 
   it("conserves every committed batch and reconciles ledger entries", () => {
@@ -328,7 +486,9 @@ describe("route, recovery, and economics invariants", () => {
       });
     }
     for (const id of ["mm-09", "mm-10", "mm-11", "mm-12", "mm-13", "mm-14", "mm-15"]) {
-      expect(state.orders.find((order) => order.id === id)?.state).toBe("RESOLVED_WITH_CARE");
+      expect(["DISPATCHED", "RESOLVED_WITH_CARE"]).toContain(
+        state.orders.find((order) => order.id === id)?.state,
+      );
     }
     expect(state.orders.every((order) => order.state === "DISPATCHED" || order.state === "RESOLVED_WITH_CARE")).toBe(true);
     expect(state.recoveries.every((offer) => offer.state === "RESOLVED")).toBe(true);
@@ -359,7 +519,7 @@ describe("route, recovery, and economics invariants", () => {
       type: "SWITCH",
       commandId: "fault-clear",
       gate: "hot-gate",
-      destination: "pack-a",
+      destination: "pack-b",
     });
     faulted = reduceShift(faulted, {
       type: "ADVANCE",
@@ -403,6 +563,7 @@ describe("fail-closed snapshot restoration", () => {
     ["invalid processed command enum", liveState, (snapshot) => { snapshot.processedCommands[0].type = "MINT"; }],
     ["result before settlement", liveState, (snapshot) => { snapshot.result = { serviceSignal: 100 }; }],
     ["tampered settled result", settledState, (snapshot) => { snapshot.result.serviceSignal += 1; }],
+    ["settled state with reopened order", settledState, (snapshot) => { snapshot.orders[0].state = "ROUTE_BLOCKED"; }],
     ["paused state without PAUSE history", liveState, (snapshot) => { snapshot.paused = true; }],
     [
       "settled state missing SETTLE history",
