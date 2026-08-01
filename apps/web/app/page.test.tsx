@@ -122,6 +122,8 @@ describe("Midnight Merge player surface", () => {
     expect(screen.getByText(/Margin keeps Mile 42 healthy/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Arena Let-Out/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Rain route read clean/i)).toBeInTheDocument();
+    expect(screen.getByText(/This local postcard records how the shift ended/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Try the route again/i)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Run Midnight Merge again/i })).toBeEnabled();
   });
 

@@ -33,6 +33,8 @@ Exit:
 - deterministic, responsive, accessibility, local persistence, and abuse gates pass with networking disabled;
 - moderated targets in [GAME_DESIGN_SPEC.md](./GAME_DESIGN_SPEC.md) are met.
 
+Run the moderated gate with the fixed cohort, neutral prompts, pass/fail math, privacy boundary, and evidence artifact in [GATE_1_PLAYTEST_PROTOCOL.md](./GATE_1_PLAYTEST_PROTOCOL.md). Informal demos and returning participants do not satisfy first-run evidence.
+
 ## Gate 2 — playable breadth
 
 Only after Gate 1 proves replayability, add authored road-event decks, topology side-grades, additional menu programs, crew/customer stories, walk-up access, roadside restoration, expression, audio layers, and larger content validation.

@@ -80,6 +80,8 @@ Usability gates:
 - every material hazard is understood from announced word and non-color cues;
 - players cannot improve results by manufacturing recovery.
 
+Collect and calculate this evidence with [GATE_1_PLAYTEST_PROTOCOL.md](./GATE_1_PLAYTEST_PROTOCOL.md). Keep usability observations separate from automated test counts, and bind every cohort to one exact clean candidate.
+
 ## Performance and reliability
 
 - deterministic reducer command latency remains below one animation frame on target devices under the first-vertical load;
