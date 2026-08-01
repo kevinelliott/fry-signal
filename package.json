@@ -6,6 +6,12 @@
   "engines": {
     "node": ">=24.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "next@16.2.11>postcss": "8.5.25",
+      "next@16.2.11>sharp": "0.35.3"
+    }
+  },
   "scripts": {
     "dev": "pnpm --filter @fry-signal/web dev",
     "build": "pnpm -r build",
@@ -15,7 +21,7 @@
     "test": "pnpm -r test",
     "test:unit": "pnpm --filter @fry-signal/domain test",
     "test:e2e": "pnpm --filter @fry-signal/web test:e2e",
-    "test:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+    "test:all": "pnpm lint && pnpm typecheck && pnpm test && pnpm --filter @fry-signal/web test:dependency-compat && pnpm build && pnpm test:e2e",
     "tezos:localnet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs localnet",
     "tezos:shadownet": "node ../project-crypt-tezos-localnet/scripts/profile.mjs shadownet"
   }
