@@ -46,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter @fry-signal/web exec playwright install --with-deps chromium
 
       - name: Check Phase 1 network boundary
         run: node scripts/ci/check-foundation-network-boundary.mjs
